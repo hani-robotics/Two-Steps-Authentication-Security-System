@@ -61,13 +61,10 @@ noTone(8);
 
 void loop() {
 
- 
   if (rfid.PICC_IsNewCardPresent() && rfid.PICC_ReadCardSerial()){
-
     for (byte i = 0; i < 4; i++) {
       nuidPICC[i] = rfid.uid.uidByte[i];
     }
-
 
 if(nuidPICC[0]==0x1A && nuidPICC[1]==0x19 && nuidPICC[2]==0xC2 && nuidPICC[3]==0x01){
   Serial.println("code verified");
