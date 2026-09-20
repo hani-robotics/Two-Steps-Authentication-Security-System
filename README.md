@@ -103,7 +103,7 @@ This came down to where the keypad-reading code sat relative to the RFID logic.
 
 4-**Verifying that the entered password matches the real one**:
 
-**/Fix:** Defined two arrays, a fixed one holding the correct password, and a second one that fills up as the user types. Each keypress is compared, in real time, against the correct password's character advances **index** to next keystroke. An incorrect character immediately resets **index** to 0,forcing the user to restart the entry from the beginning.
+**Fix:** Defined two arrays, a fixed one holding the correct password, and a second one that fills up as the user types. Each keypress is compared, in real time, against the correct password's character advances **index** to next keystroke. An incorrect character immediately resets **index** to 0,forcing the user to restart the entry from the beginning.
 
 
 
