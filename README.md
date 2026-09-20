@@ -84,7 +84,7 @@ Row pins & Cols pins are keypad's protocols.
 1-**Keypad was completely unresponsive, despite being correctly defined in code**:
 
 The RFID block used early **return** statement when no card was present. Since **loop()** runs top to bottom, hitting **return** exits the entire functions immediately **So whenever no card was on the reader (the vast majority of the time)**, the keypad-reading code further down never even executed.
-**/Fix:** Remove the **return** statements and wrapped the RFID logic in a conditional block instead, so a missing card no longer prevents the rest of **loop()**from running.
+**/Fix:** Remove the **return** statements and wrapped the RFID logic in a conditional block instead, so a missing card no longer prevents the rest of **loop()** from running.
 
 
 
