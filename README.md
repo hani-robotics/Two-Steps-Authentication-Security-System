@@ -86,19 +86,27 @@ The RFID block used early **return** statement when no card was present. Since *
 -**Fix:** Remove the **return** statements and wrapped the RFID logic in a conditional block instead, so a missing card no longer prevents the rest of **loop()**from running.
 
 
+
 2-**Remembering the result of the last card scan**:
 
 The system needed to **remember** whether the last scanned card was valid, even after the card was removed from the reader-since scanning a card and typing a password cannot happen at the same instant.
 -**Fix:** Introduced a persistent **iscorrect** flag. It resets to **0** whenever an incorrect card is scanned(blocking password entry entirely), and is set to **1** when the correct card is scanned(unlocking the password stage).
+
+
 
 3-**Keypad input wasn't being read reliably**:
 
 This came down to where the keypad-reading code sat relative to the RFID logic.
 -**Fix:** Placed the keypad-reading instructions to run right after the RFID instructions in **loop()**, so both are checked on every iteration without either blocking the other.
 
+
+
 4-**Verifying that the entered password matches the real one**:
 
 -**Fix:** Defined two arrays, a fixed one holding the correct password, and a second one that fills up as the user types. Each keypress is compared, in real time, against the correct password's character advances **index** to next keystroke. An incorrect character immediately resets **index** to 0,forcing the user to restart the entry from the beginning.
+
+
+
 
 5-**Buzzer wasn't producing sound**
 
