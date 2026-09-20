@@ -6,12 +6,12 @@
 
 ## Overview:
 
-The system verifies identity in two independent steps : an **RFID** card scan,followed by a password enteredon a **keypad**.
-Access is only confirmed when both checks succeed. The two inputs are handled independently in the main loop rather than sequantially blocking one another, since a user cannot physically scan a card and type a password at the exact same instant.
+The system verifies identity in two independent steps : an **RFID** card scan,followed by a password entered on a **keypad**.
+Access is only confirmed when both checks succeed. The two inputs are handled independently in the main loop rather than sequentially blocking one another, since a user cannot physically scan a card and type a password at the exact same instant.
 
 ## How it works:
 
--**Unrecognized card** ==> Triggers an alarm (Red LED + BUZZER) fpr 5 seconds. No message shown in LCD.
+-**Unrecognized card** ==> Triggers an alarm (Red LED + Buzzer) for 5 seconds. No message shown on LCD.
 
 -**Correct RFID tag** ==> Activates the Green LED and enables password entry.
 
@@ -29,7 +29,7 @@ Access is only confirmed when both checks succeed. The two inputs are handled in
 
 -MFRC522 RFID Reader
 
--Access chip & Access card
+-RFID tag & card
 
 -I2C LCD 16x2
 
@@ -58,12 +58,12 @@ Access is only confirmed when both checks succeed. The two inputs are handled in
 | Connection   | Pin         | 
 |--------------|-------------|
 |  RST         | 9           |
-|  SDA         | 10          |
+|  SS          | 10          |
 |  MOSI        | 11          |
 |  MISO        | 12          |
 |  SCK         | 13          |
 |  SDA         | A4          |
-|  SDL         | A5          |
+|  SCL         | A5          |
 |  ROW Pins    | 6,7,5,2     |
 |  Cols pins   | A0,A1, A2,A3|
 |  Buzzer      | 8           |
@@ -71,50 +71,46 @@ Access is only confirmed when both checks succeed. The two inputs are handled in
 |  Red LED     | 4           |
 
 
-RST, SDA, MOSI, MISO & SCK are RFID's pins (SPI protocol).
+RST, SS, MOSI, MISO & SCK are RFID's pins (SPI protocol).
 
-SDA, SDL are LCD's pins (I2C protocol).
+SDA, SCL are LCD's pins (I2C protocol).
 
 Row pins & Cols pins are keypad's protocols.
 
 
 ## Debugging & Problem solving :
 
-1-**Keypadwas completely unresponsive, despite being correctly defined in code**:
+1-**Keypad was completely unresponsive, despite being correctly defined in code**:
 
-The RFID block used early **return** statement when no card was present. Since **loop()** runs top to bottom, hitting **return** exists the entire functions immediately **"So whenever no card was on the reader (the vast majority of the time)**, the keypad-reading code further down never even executed.
-
+The RFID block used early **return** statement when no card was present. Since **loop()** runs top to bottom, hitting **return** exits the entire functions immediately **So whenever no card was on the reader (the vast majority of the time)**, the keypad-reading code further down never even executed.
 -**Fix:** Remove the **return** statements and wrapped the RFID logic in a conditional block instead, so a missing card no longer prevents the rest of **loop()**from running.
 
 
 2-**Remembering the result of the last card scan**:
 
-The system needed to **remember** whether the last scanned card was valid, even after the card was removed from the reader-since scanning a card and typing a password cannot happen at the instant.
-
+The system needed to **remember** whether the last scanned card was valid, even after the card was removed from the reader-since scanning a card and typing a password cannot happen at the same instant.
 -**Fix:** Introduced a persistent **iscorrect** flag. It resets to **0** whenever an incorrect card is scanned(blocking password entry entirely), and is set to **1** when the correct card is scanned(unlocking the password stage).
 
 3-**Keypad input wasn't being read reliably**:
 
 This came down to where the keypad-reading code sat relative to the RFID logic.
-
 -**Fix:** Placed the keypad-reading instructions to run right after the RFID instructions in **loop()**, so both are checked on every iteration without either blocking the other.
 
 4-**Verifying that the entered password matches the real one**:
 
--**Fix:** Defined two arrays, a fixed one holding the correct password, and a second one that fills up as the user types. Each keypress is compared, in real time, against the correct password's character aadvances **index** to next keystroke. An incorrect character immediately resets **index** to 0,forcing the user to restart the entry from the beginning.
+-**Fix:** Defined two arrays, a fixed one holding the correct password, and a second one that fills up as the user types. Each keypress is compared, in real time, against the correct password's character advances **index** to next keystroke. An incorrect character immediately resets **index** to 0,forcing the user to restart the entry from the beginning.
 
 5-**Buzzer wasn't producing sound**
 
 The buzzer stayed silent even though it was wired to it's designated pin and triggerd correctly in code.
+**Fix:** Added a resistor in series with the buzzer, which resolved the issue, likely a current limiting requirement that the direct pin connection alone didn't satisfy. 
 
-**Fix:** Added a resistor in series with the buzzer, which resolved the issue-likely a current limiting requirement that the direct pin connection alone didn't satisfy. 
 
-
-## What i learned:
+## What I learned:
 
 -**delay()** freezes, it doesn't wait. During a 'delay()' the entire program stops, including sensors, & inputs.
 
--you have to know exactly the position of every instruction in your code, for example: when write it inside the condition or outside.
+-you have to know exactly the position of every instruction in your code, for example: whether to write it inside or outside the condition .
 
 
 ## Future Improvements:
