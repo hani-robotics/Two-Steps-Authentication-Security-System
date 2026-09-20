@@ -134,4 +134,4 @@ The buzzer stayed silent even though it was wired to it's designated pin and tri
 
 ## DEMO:
 
-Watch the entire demo in linkedIn :
+Watch the entire demo in linkedIn : [ https://www.linkedin.com/in/hani-sa%C3%AFdi-8941b5404/ ]
