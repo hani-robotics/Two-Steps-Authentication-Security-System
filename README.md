@@ -22,6 +22,7 @@ Access is only confirmed when both checks succeed. The two inputs are handled in
 
 ## Finite State Machine diagram :
 
+[ https://github.com/hani-robotics/Two-Steps-Authentication-Security-System/blob/main/State-Machine.png ]
 
 ## Hardware components:
 
