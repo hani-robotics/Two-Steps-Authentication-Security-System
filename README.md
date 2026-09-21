@@ -76,7 +76,7 @@ RST, SS, MOSI, MISO & SCK are RFID's pins (SPI protocol).
 
 SDA, SCL are LCD's pins (I2C protocol).
 
-Row pins & Cols pins are keypad's protocols.
+Row pins & Cols pins are keypad's pins.
 
 
 ## Debugging & Problem solving :
